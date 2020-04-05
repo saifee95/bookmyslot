@@ -13,6 +13,8 @@ var mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology',true);
 require('./model/User');
+require('./model/Slot');
+require('./model/Meeting');
 // var db = mongoose.connection;
 mongoose.connect('mongodb://msaifee:saimoh95@ds055397.mlab.com:55397/bookmyslot');
 
@@ -39,7 +41,7 @@ app.use(session({
 }));
 app.use(flash());
 app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.session());
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

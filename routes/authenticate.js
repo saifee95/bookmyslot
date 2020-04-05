@@ -18,6 +18,16 @@ router.get('/login',function(req,res){
 
 });
 
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  Users.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 passport.use(new localStrategy({
     usernameField: 'userid',
     passwordField: 'inputPassword'
@@ -45,7 +55,7 @@ router.post('/login',[
 	check('userid','User ID is required').notEmpty(),
 	check('inputPassword','Password is required').notEmpty()
 
-	],passport.authenticate('local',{session:false,failureRedirect:'/auth/login',failureFlash:'Invalid user id or password'}),(req,res) =>{
+	],passport.authenticate('local',{failureRedirect:'/auth/login',failureFlash:'Invalid user id or password'}),(req,res) =>{
 
 	const errors = validationResult(req);
 	if(!errors.isEmpty()){
@@ -105,6 +115,7 @@ router.post('/signup',[
 					if(err)
 						console.log(err);
 					else{
+						console.log(typeof resp._id);
 						res.redirect('/auth/login');
 					}	
 				});

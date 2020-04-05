@@ -8,12 +8,18 @@ autoIncrement.initialize(connection);
 var userSchema = new mongoose.Schema({
     userid : {
     	type:String,
+    	unique:true,
+    	required:true,
     	index:true
     },
     email : {
-    	type:String
+    	type:String,
+    	required:true
     },
-    passwd : String
+    passwd : {
+    	type: String,
+    	required:true	
+    } 
 });
 
 userSchema.plugin(autoIncrement.plugin, 'User');

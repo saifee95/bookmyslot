@@ -28,9 +28,8 @@ router.get('/myslots/:date', isLoggedin ,function(req,res){
 		res.send("Invalid date");
 	}
 	else{
-		console.log(slot_date);
-		var slot = {owner:req.user._id,slot_date:slot_date};
-		Slots.find(slot,function(err,slot){
+		var query = {owner:req.user.userid,slot_date:slot_date};
+		Slots.find(query,function(err,slot){
 
 			if(err){
 				console.log(err);
@@ -45,8 +44,8 @@ router.get('/myslots/:date', isLoggedin ,function(req,res){
 				for(var i=0;i<24;i++){
 
 					var newSlot = new Slots();
-				// console.log(typeof(req.user._id));
-					newSlot.owner = req.user._id;
+					console.log(typeof(req.user.userid));
+					newSlot.owner = req.user.userid;
 					newSlot.slot_time = i;
 					newSlot.slot_date = slot_date;
 					newSlot.availability = true;
@@ -56,13 +55,13 @@ router.get('/myslots/:date', isLoggedin ,function(req,res){
 					
 				}
 
-				Slots.collection.insert(slots,function(err,slots){
+				Slots.collection.insert(slots,function(err,data){
 
 					if(err){
 						console.log(err);
 					}
 
-					res.send(slots.ops);
+					res.send(data.ops);
 				});
 			}		
 		});
@@ -77,9 +76,8 @@ router.get('/freeslots/:date', isLoggedin ,function(req,res){
 		res.send("Invalid date");
 	}
 	else{
-		console.log(slot_date);
-		var slot = {owner:req.user._id,slot_date:slot_date,availability:true};
-		Slots.find(slot,['_id','slot_time'],{sort:{slot_time:1}},function(err,slot){
+		var query = {owner:req.user.userid,slot_date:slot_date,availability:true};
+		Slots.find(query,['_id','slot_time'],{sort:{slot_time:1}},function(err,slot){
 
 			if(err){
 				console.log(err);
@@ -95,7 +93,7 @@ router.get('/freeslots/:date', isLoggedin ,function(req,res){
 
 					var newSlot = new Slots();
 				// console.log(typeof(req.user._id));
-					newSlot.owner = req.user._id;
+					newSlot.owner = req.user.userid;
 					newSlot.slot_time = i;
 					newSlot.slot_date = slot_date;
 					newSlot.availability = true;
@@ -105,13 +103,13 @@ router.get('/freeslots/:date', isLoggedin ,function(req,res){
 					
 				}
 
-				Slots.collection.insert(slots,function(err,slots){
+				Slots.collection.insert(slots,function(err,data){
 
 					if(err){
 						console.log(err);
 					}
 
-					res.render('freeslots',{slots:slots.ops});
+					res.render('freeslots',{slots:data.ops});
 				});
 			}		
 		});
@@ -123,15 +121,13 @@ router.post('/freeslots/:date', isLoggedin ,function(req,res){
 	// console.log(req.params);
 	var slot_date = req.params.date;
 	var busySlots = req.body.busyslots;
-	console.log(busySlots);
 	if(!validateDate(slot_date)){
 		res.send("Invalid date");
 	}
 	else{
-		console.log(slot_date);
 		for(var i of busySlots){
-			var slot = {owner:req.user._id,slot_date:slot_date,slot_time:i};
-			Slots.update(slot,{availability:false},function(err,num){
+			var query = {owner:req.user.userid,slot_date:slot_date,slot_time:i};
+			Slots.update(query,{availability:false},function(err,num){
 
 				if(err){
 					console.log(err);
@@ -152,9 +148,8 @@ router.get('/busyslots/:date', isLoggedin ,function(req,res){
 		res.send("Invalid date");
 	}
 	else{
-		console.log(slot_date);
-		var slot = {owner:req.user._id,slot_date:slot_date,availability:false};
-		Slots.find(slot,['_id','slot_time'],{sort:{slot_time:1}},function(err,slot){
+		var query = {owner:req.user.userid,slot_date:slot_date,availability:false};
+		Slots.find(query,['_id','slot_time'],{sort:{slot_time:1}},function(err,slot){
 
 			if(err){
 				console.log(err);
@@ -170,15 +165,13 @@ router.post('/busyslots/:date', isLoggedin ,function(req,res){
 	// console.log(req.params);
 	var slot_date = req.params.date;
 	var freeSlots = req.body.freeslots;
-	console.log(freeSlots);
 	if(!validateDate(slot_date)){
 		res.send("Invalid date");
 	}
 	else{
-		console.log(slot_date);
 		for(var i of freeSlots){
-			var slot = {owner:req.user._id,slot_date:slot_date,slot_time:i};
-			Slots.update(slot,{availability:true},function(err,num){
+			var query = {owner:req.user.userid,slot_date:slot_date,slot_time:i};
+			Slots.update(query,{availability:true},function(err,num){
 
 				if(err){
 					console.log(err);
@@ -207,7 +200,6 @@ function validateDate(inputText)
   // Match the date format through regular expression
   	if(inputText.match(dateformat))
 	{
-		console.log(1);
   		var opera2 = inputText.split('-');
   		lopera2 = opera2.length;
   // Extract the string into month, date and year
@@ -231,15 +223,12 @@ function validateDate(inputText)
   		console.log(mm);
 
   		if(yy < year){
-  			console.log(3);
 			return false;
  		}
   		else if((yy === year) && (mm < month)){
-  			console.log(4);
 			return false;
  	 	}
   		else if((mm === month) && (dd < day)){
-  			console.log(5);
 			return false;
   		} 	
   		else{
@@ -249,7 +238,6 @@ function validateDate(inputText)
   			{
 				if (dd>ListofDays[mm-1])
 				{
-					console.log(6);
 					return false;
 				}
   			}	
@@ -275,7 +263,6 @@ function validateDate(inputText)
 	}
   	else
   	{
-  		console.log(2);
 		return false;
   	}
 }

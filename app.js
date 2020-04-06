@@ -12,16 +12,17 @@ var flash = require('connect-flash');
 var mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology',true);
+mongoose.set('useCreateIndex', true);
 require('./model/User');
 require('./model/Slot');
 require('./model/Meeting');
 // var db = mongoose.connection;
-mongoose.connect('mongodb://msaifee:saimoh95@ds055397.mlab.com:55397/bookmyslot');
+mongoose.connect('mongodb://msaifee:saimoh95@ds145921.mlab.com:45921/bookmyslot');
 
 var home = require('./routes/home');
 var auth = require('./routes/authenticate');
 var users = require('./routes/users');
-
+var meet = require('./routes/meeting');
 var app = express();
 
 // view engine setup
@@ -51,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', home);
 app.use('/auth', auth);
 app.use('/users',users);
+app.use('/meet',meet);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

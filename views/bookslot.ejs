@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Book Slot</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel='stylesheet' href='/stylesheets/signin.css'/>
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  </head>
+  <body class="text-center">
+      
+    <form class="form-signin" method="post">
+      <% if(meets) { %>
+      <p><%= meets.title %></p>
+      <p><%= meets.sender %></p>
+      <p><%= meets.slot.slot_date %></p>
+      <% } %>
+      <h3 class="h3 mb-3 font-weight-normal">Select a slot to book</h3>
+      
+      <% if(slots) { %>
+    <% for(var i=0; i < slots.length; i++) { %>
+      <input type="radio" name="freeslot" id="<%= slots[i]._id %>" value="<%= slots[i].slot_time %>">&nbsp;&nbsp;<strong><%= slots[i].slot_time %></strong>&nbsp;&nbsp;<br>
+    <% } %>
+  <% } %>
+  <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+  </form>
+
+</body>
+</html>

@@ -1,15 +1,15 @@
 var mongoose = require('mongoose');
-var autoIncrement = require('mongoose-auto-increment');
-require('./User');
+// var autoIncrement = require('mongoose-auto-increment');
 
-var connection = mongoose.createConnection('mongodb://msaifee:saimoh95@ds055397.mlab.com:55397/bookmyslot');
+var connection = mongoose.createConnection('mongodb://msaifee:saimoh95@ds145921.mlab.com:45921/bookmyslot');
 
-autoIncrement.initialize(connection);
+// autoIncrement.initialize(connection);
 
 var slotSchema = new mongoose.Schema({
     owner : {
-    	type:Number,
-    	ref:'User'
+    	type:String,
+        index:true,
+        required:true
     },
     slot_time : {
     	type:Number,
@@ -28,6 +28,6 @@ var slotSchema = new mongoose.Schema({
     }
 });
 
-slotSchema.plugin(autoIncrement.plugin, 'Slot');
+// slotSchema.plugin(autoIncrement.plugin, 'Slot');
 
 mongoose.model("Slot", slotSchema);

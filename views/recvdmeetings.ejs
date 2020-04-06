@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Meetings</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel='stylesheet' href='/stylesheets/new.css'/>
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  </head>
+  <body class="text-center">
+      
+    <div class="container con">
+    <div class="row">
+    <div class="col-md-6 col-md-offset-3" style = "background:transparent">
+    <div class="panel" style = "background:transparent;border:solid black">
+    <table class="table" style = "background:transparent">
+    <tbody>
+        <% if(meets) { %>
+        <% for(var i=0; i < meets.length; i++) { %>
+          <tr style="border:black">
+          <td><a href='bookslot/<%= meets[i]._id %>' style = "color:black;font-size:18px"><%= meets[i].title %></a></td>
+          </tr>
+        <% } %>
+        <% } %>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

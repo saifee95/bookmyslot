@@ -10,6 +10,8 @@ var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+
+
 app.use(cookieParser());
 
 router.get('/login',function(req,res){
@@ -19,35 +21,36 @@ router.get('/login',function(req,res){
 });
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+ 	done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-  Users.findById(id, function(err, user) {
-    done(err, user);
-  });
+	Users.findById(id, function(err, user) {
+    	done(err, user);
+  	});
 });
 
 passport.use(new localStrategy({
-    usernameField: 'userid',
-    passwordField: 'inputPassword'
-  },
-  function(username, password, done) {
-    Users.findOne({ userid: username }, function (err, user) {
+    	usernameField: 'userid',
+    	passwordField: 'inputPassword'
+  	},
+  	function(username, password, done) {
+		Users.findOne({ userid: username }, function (err, user) {
 
-    // console.log("Hi");
-      if (err) { return done(err); }
-      if (!user) {
+    		if (err) { 
+    			return done(err);
+    		}
+      		if (!user) {
 
-      	console.log("Unknown User"); 
-      	return done(null, false,{message:'Unknown User'});
-      }
-      if (user.passwd !== password){
-      	return done(null, false,{message:'Wrong Password'});
-      }
-      return done(null, user);
-    });
-  }
+      			console.log("Unknown User"); 
+      			return done(null, false,{message:'Unknown User'});
+      		}
+      		if (user.passwd !== password){
+      			return done(null, false,{message:'Wrong Password'});
+      		}
+      		return done(null, user);
+    	});
+  	}
 ));
 
 router.post('/login',[
@@ -57,18 +60,16 @@ router.post('/login',[
 
 	],passport.authenticate('local',{failureRedirect:'/auth/login',failureFlash:'Invalid user id or password'}),(req,res) =>{
 
-	const errors = validationResult(req);
-	if(!errors.isEmpty()){
-		console.log(errors.array());
-		res.render('login',{errors:errors.array()});
-		// return res.status(422).json({ errors: errors.array() });
-	}
-	else{
+		const errors = validationResult(req);
+		if(!errors.isEmpty()){
+			res.render('login',{errors:errors.array()});
+		}
+		else{
 
-		console.log("Login Successful");
-		res.redirect('/users');
-	}
-	});
+			console.log("Login Successful");
+			res.redirect('/users');
+		}
+});
 
 router.get('/signup',function(req,res){
 
@@ -90,11 +91,8 @@ router.post('/signup',[
 	var password = req.body.inputPassword;
 
 	const errors = validationResult(req);
-	// console.log(errors);
 	if(!errors.isEmpty()){
-		// console.log(errors.array());
 		res.render('signup',{errors:errors.array()});
-		// return res.status(422).json({ errors: errors.array() });
 	}
 	else{
 		Users.findOne({userid:userid},function(err,resp){

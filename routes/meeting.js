@@ -16,8 +16,6 @@ router.get('/', isLoggedin ,function(req, res, next) {
 
 router.post('/', isLoggedin, function(req,res){
 
-	console.log(req.body);
-
 	var title = req.body.title;
 	var attendee = req.body.userid;
 	var organizer = req.user.userid;
@@ -45,7 +43,7 @@ router.post('/', isLoggedin, function(req,res){
 		}
 		else{
 
-			var query = {owner:organizer,slot_date:date,slot_time:slot};
+			var query = {owner:organizer,slot_date:date,slot_time:slot,availability:true};
 			Slots.findOne(query,function(err,myslot){
 
 				if(err){
@@ -53,8 +51,6 @@ router.post('/', isLoggedin, function(req,res){
 				}
 				if(myslot){
 
-					console.log(myslot);
-					console.log(myslot._id);
 					var newMeet = new Meetings();
 					newMeet.title = title;
 					newMeet.sender = organizer;
@@ -74,7 +70,7 @@ router.post('/', isLoggedin, function(req,res){
 				}
 				else{
 
-					var errors = [{"msg":"Invalid Slot"}];
+					var errors = [{"msg":"This slot is blocked."}];
 					res.render('meeting',{errors:errors});
 				}		
 			});
@@ -92,8 +88,7 @@ router.get('/mymeetings', isLoggedin ,function(req,res){
 			console.log(err);
 		}
 		if(meets.length){
-			res.send(meets);
-				
+			res.send(meets);			
 		}
 		else{
 
@@ -104,7 +99,7 @@ router.get('/mymeetings', isLoggedin ,function(req,res){
 
 router.get('/recvdmeetings', isLoggedin ,function(req,res){
 
-	Meetings.find({recipient:req.user.userid},function(err,meets){
+	Meetings.find({recipient:req.user.userid}).populate('slot').exec(function(err,meets){
 
 		if(err){
 			console.log(err);
@@ -128,14 +123,13 @@ router.get('/bookslot/:id', isLoggedin ,function(req,res){
 		}
 		if(meet){
 
-			console.log(meet);
 			var sender = meet.sender;
 			var date = meet.slot.slot_date;
 
 			Slots.find({owner:sender,slot_date:date,availability:true},function(err,data){
 
 				if(err){
-					return err;
+					console.log(err);
 				}
 
 				if(data.length){
@@ -161,7 +155,6 @@ router.get('/bookslot/:id', isLoggedin ,function(req,res){
 
 router.post('/bookslot/:id', isLoggedin ,function(req,res){
 
-	// console.log(req.body);
 	var free = req.body.freeslot;
 	Meetings.findById({_id:req.params.id}).populate('slot').exec(function(err,meet){
 
@@ -177,9 +170,8 @@ router.post('/bookslot/:id', isLoggedin ,function(req,res){
 			Slots.findOneAndUpdate({owner:sender,slot_date:date,slot_time:free},{availability:false},function(err,data){
 
 				if(err){
-					return err;
+					console.log(err);
 				}
-
 				if(data){
 
 					Meetings.update({_id:req.params.id},{slot:data._id},function(err,resp){
@@ -189,149 +181,20 @@ router.post('/bookslot/:id', isLoggedin ,function(req,res){
 						}
 
 						if(resp){
-							console.log(resp);
 							res.send('Done');
 						}
 					});
-
 				}
 				else{
-
 					res.send("Could not find any slots");
-
 				}
-
 			});
-			
 		}
 		else{
-
 			res.send("No meeting found");
 		}		
 	});
 });
-
-// router.get('/freeslots/:date', isLoggedin ,function(req,res){
-
-// 	// console.log(req.params);
-// 	var slot_date = req.params.date;
-// 	if(!validateDate(slot_date)){
-// 		res.send("Invalid date");
-// 	}
-// 	else{
-// 		console.log(slot_date);
-// 		var slot = {owner:req.user._id,slot_date:slot_date,availability:true};
-// 		Slots.find(slot,['_id','slot_time'],{sort:{slot_time:1}},function(err,slot){
-
-// 			if(err){
-// 				console.log(err);
-// 			}
-// 			if(slot.length){
-// 				res.render('freeslots',{slots:slot});
-				
-// 			}
-// 			else{
-
-// 				var slots = [];
-// 				for(var i=0;i<24;i++){
-
-// 					var newSlot = new Slots();
-// 				// console.log(typeof(req.user._id));
-// 					newSlot.owner = req.user._id;
-// 					newSlot.slot_time = i;
-// 					newSlot.slot_date = slot_date;
-// 					newSlot.availability = true;
-// 					newSlot.created_at = Date.now();
-
-// 					slots.push(newSlot);
-					
-// 				}
-
-// 				Slots.collection.insert(slots,function(err,slots){
-
-// 					if(err){
-// 						console.log(err);
-// 					}
-
-// 					res.render('freeslots',{slots:slots.ops});
-// 				});
-// 			}		
-// 		});
-// 	}
-// });
-
-// router.post('/freeslots/:date', isLoggedin ,function(req,res){
-
-// 	// console.log(req.params);
-// 	var slot_date = req.params.date;
-// 	var busySlots = req.body.busyslots;
-// 	console.log(busySlots);
-// 	if(!validateDate(slot_date)){
-// 		res.send("Invalid date");
-// 	}
-// 	else{
-// 		console.log(slot_date);
-// 		for(var i of busySlots){
-// 			var slot = {owner:req.user._id,slot_date:slot_date,slot_time:i};
-// 			Slots.update(slot,{availability:false},function(err,num){
-
-// 				if(err){
-// 					console.log(err);
-// 				}
-// 				console.log(num.nModified);
-
-// 			});
-// 		}
-// 		res.redirect('/users/freeslots/'+slot_date);
-// 	}
-// });
-
-// router.get('/busyslots/:date', isLoggedin ,function(req,res){
-
-// 	// console.log(req.params);
-// 	var slot_date = req.params.date;
-// 	if(!validateDate(slot_date)){
-// 		res.send("Invalid date");
-// 	}
-// 	else{
-// 		console.log(slot_date);
-// 		var slot = {owner:req.user._id,slot_date:slot_date,availability:false};
-// 		Slots.find(slot,['_id','slot_time'],{sort:{slot_time:1}},function(err,slot){
-
-// 			if(err){
-// 				console.log(err);
-// 			}
-// 			res.render('busyslots',{slots:slot});
-					
-// 		});
-// 	}
-// });
-
-// router.post('/busyslots/:date', isLoggedin ,function(req,res){
-
-// 	// console.log(req.params);
-// 	var slot_date = req.params.date;
-// 	var freeSlots = req.body.freeslots;
-// 	console.log(freeSlots);
-// 	if(!validateDate(slot_date)){
-// 		res.send("Invalid date");
-// 	}
-// 	else{
-// 		console.log(slot_date);
-// 		for(var i of freeSlots){
-// 			var slot = {owner:req.user._id,slot_date:slot_date,slot_time:i};
-// 			Slots.update(slot,{availability:true},function(err,num){
-
-// 				if(err){
-// 					console.log(err);
-// 				}
-// 				console.log(num.nModified);
-
-// 			});
-// 		}
-// 		res.redirect('/users/busyslots/'+slot_date);
-// 	}
-// });
 
 function isLoggedin (req,res,next){
 
@@ -344,15 +207,11 @@ function isLoggedin (req,res,next){
 
 function validateDate(inputText)
 {
-	// var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
 	var dateformat = /^(?:(0[1-9]|[12][0-9]|3[01])[\-.](0[1-9]|1[012])[\-.](19|20)[0-9]{2})$/;
   // Match the date format through regular expression
   	if(inputText.match(dateformat))
 	{
-		console.log(1);
-  		var opera2 = inputText.split('-');
-  		lopera2 = opera2.length;
-  // Extract the string into month, date and year
+  		// Extract the string into month, date and year
   		
   		var pdate = inputText.split('-');
   		
@@ -365,23 +224,13 @@ function validateDate(inputText)
   		var month = d.getMonth()+1;
   		var day = d.getDate();
   		
-  		console.log(year);
-  		console.log(day);
-  		console.log(month);
-  		console.log(dd);
-  		console.log(yy);
-  		console.log(mm);
-
   		if(yy < year){
-  			console.log(3);
 			return false;
  		}
   		else if((yy === year) && (mm < month)){
-  			console.log(4);
 			return false;
  	 	}
   		else if((mm === month) && (dd < day)){
-  			console.log(5);
 			return false;
   		} 	
   		else{
@@ -391,7 +240,6 @@ function validateDate(inputText)
   			{
 				if (dd>ListofDays[mm-1])
 				{
-					console.log(6);
 					return false;
 				}
   			}	
@@ -417,7 +265,6 @@ function validateDate(inputText)
 	}
   	else
   	{
-  		console.log(2);
 		return false;
   	}
 }

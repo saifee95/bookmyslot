@@ -6,16 +6,30 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Signin</title>
+    <title>Homepage</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   </head>
-  <body class="text-center">
+  <body style="padding: 50px">
       <div>
       <a href='users/logout'><button class="btn btn-lg btn-primary" style="float: right;" type="button">Logout</button></a>
       </div>
 
+    <h1>Welcome to BookMySlot</h1>
+    <h3>Usage Instructions</h3><br>
+    <ul><strong>1) To view and set available slots for a particular day, use https://bookslot.herokuapp.com/users/myslots/{provide a date here in dd-mm-yyyy format}</strong></ul>
+    <ul><strong>Example : https://bookslot.herokuapp.com/users/freeslots/12-04-2020</strong></ul><br>
+
+    <ul><strong>2)To view and set busy slots for a particular day, use https://bookslot.herokuapp.com/users/busyslots/{provide a date here in dd-mm-yyyy format}</strong></ul>
+    <ul><strong>Example : https://bookslot.herokuapp.com/users/busyslots/12-04-2020</strong></ul><br>
+
+    <ul><strong>To create a meeting for a particular day, use https://bookslot.herokuapp.com/meet</strong></ul>
+    <ul><strong>To view meetings set by this user, use https://bookslot.herokuapp.com/meet/mymeetings</strong></ul>
+    <ul><strong>To view meetings recieved by this user, use https://bookslot.herokuapp.com/meet/recvdmeetings</strong></ul>
+
+    <ul><strong>Once the user clicks on a received meeting, he will be directed to a page where he has to book a slot for that meeting.</strong></ul>
+    <ul><strong>If a user tries to access any of the above pages without authentication, he will be redirected to the login page</strong></ul>
       
   </body>
 </html>

@@ -8,15 +8,17 @@ const { check, validationResult } = require('express-validator');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
-// var mongo = require('mongodb');
+
+
 var mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology',true);
 mongoose.set('useCreateIndex', true);
+
+
 require('./model/User');
 require('./model/Slot');
 require('./model/Meeting');
-// var db = mongoose.connection;
 mongoose.connect('mongodb://msaifee:saimoh95@ds145921.mlab.com:45921/bookmyslot');
 
 var home = require('./routes/home');
@@ -40,13 +42,15 @@ app.use(session({
 	resave:true
 
 }));
+
 app.use(flash());
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 
 app.use('/', home);

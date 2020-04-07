@@ -9,29 +9,29 @@
     <title>Meetings</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel='stylesheet' href='/stylesheets/new.css'/>
+    <link rel='stylesheet' href='/stylesheets/table.css'/>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   </head>
   <body class="text-center">
-      
-    <div class="container con">
-    <div class="row">
-    <div class="col-md-6 col-md-offset-3" style = "background:transparent">
-    <div class="panel" style = "background:transparent;border:solid black">
-    <table class="table" style = "background:transparent">
-    <tbody>
-        <% if(meets) { %>
+    <div style="text-align: right">
+      <a href='/users/logout'><button class="btn btn-lg btn-primary" style="float: right;" type="button">Logout</button></a>
+    </div>  
+    <table>
+    <tr>
+      <th>Title</th>
+      <th>Organizer</th>
+      <th>Date</th>
+      <% if(meets) { %>
         <% for(var i=0; i < meets.length; i++) { %>
           <tr style="border:black">
-          <td><a href='bookslot/<%= meets[i]._id %>' style = "color:black;font-size:18px"><%= meets[i].title %></a></td>
+          <td><a href='bookslot/<%= meets[i]._id %>'><%= meets[i].title %></a></td>
+          <td><%= meets[i].sender %></td>
+          <td><%= meets[i].slot.slot_date %></td>
           </tr>
         <% } %>
-        <% } %>
-    </tbody>
+      <% } %>
+    </tr>
     </table>
-    </div>
-    </div>
-    </div>
-    </div>
+    
   </body>
 </html>

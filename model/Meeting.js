@@ -1,10 +1,7 @@
 var mongoose = require('mongoose');
-// var autoIncrement = require('mongoose-auto-increment');
 require('./Slot');
 
 var connection = mongoose.createConnection('mongodb://msaifee:saimoh95@ds145921.mlab.com:45921/bookmyslot');
-
-// autoIncrement.initialize(connection);
 
 var meetingSchema = new mongoose.Schema({
     
@@ -19,6 +16,9 @@ var meetingSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    date : {
+        type:String,
+    },
     slot:{
         type:mongoose.Types.ObjectId,
         required:true,
@@ -28,7 +28,5 @@ var meetingSchema = new mongoose.Schema({
         type:Date
     }
 });
-
-// meetingSchema.plugin(autoIncrement.plugin, 'Meeting');
 
 mongoose.model("Meeting", meetingSchema);

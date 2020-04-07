@@ -1,9 +1,6 @@
 var mongoose = require('mongoose');
-// var autoIncrement = require('mongoose-auto-increment');
 
 var connection = mongoose.createConnection('mongodb://msaifee:saimoh95@ds145921.mlab.com:45921/bookmyslot');
-
-// autoIncrement.initialize(connection);
 
 var slotSchema = new mongoose.Schema({
     owner : {
@@ -27,7 +24,5 @@ var slotSchema = new mongoose.Schema({
         type:Date
     }
 });
-
-// slotSchema.plugin(autoIncrement.plugin, 'Slot');
 
 mongoose.model("Slot", slotSchema);

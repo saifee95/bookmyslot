@@ -9,20 +9,22 @@
     <title>SignUp</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel='stylesheet' href='/stylesheets/signin.css'/>
+    <link rel='stylesheet' href='/stylesheets/slots.css'/>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   </head>
   <body class="text-center">
-      
+    <div style="text-align: right">
+      <a href='/users/logout'><button class="btn btn-lg btn-primary" style="float: right;" type="button">Logout</button></a>
+    </div>    
     <form class="form-signin" method="post">
 
-      <h3 class="h3 mb-3 font-weight-normal">Please Select Time Slots to mark them as Unavailable</h3>
+      <h3 class="h3 mb-3 font-weight-normal">Please Select Time Slots to mark them as Unavailable</h3><br>
       
       <% if(slots) { %>
     <% for(var i=0; i < slots.length; i++) { %>
-      <input type="checkbox" name="busyslots" id="<%= slots[i]._id %>" value="<%= slots[i].slot_time %>">&nbsp;&nbsp;<strong><%= slots[i].slot_time %></strong>&nbsp;&nbsp;<br>
+      <input type="checkbox" name="busyslots" id="<%= slots[i]._id %>" value="<%= slots[i].slot_time %>">&nbsp;&nbsp;<strong><%= slots[i].slot_time %> - <%= slots[i].slot_time+1 %></strong>&nbsp;&nbsp;<br>
     <% } %>
-  <% } %>
+  <% } %><br>
   <button class="btn btn-lg btn-primary" type="submit">Submit</button>
   </form>
 

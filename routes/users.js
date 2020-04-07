@@ -22,7 +22,6 @@ router.get('/logout',function(req,res){
 
 router.get('/myslots/:date', isLoggedin ,function(req,res){
 
-	// console.log(req.params);
 	var slot_date = req.params.date;
 	if(!validateDate(slot_date)){
 		res.send("Invalid date");
@@ -36,7 +35,6 @@ router.get('/myslots/:date', isLoggedin ,function(req,res){
 			}
 			if(slot.length){
 				res.send(slot);
-				
 			}
 			else{
 
@@ -44,7 +42,6 @@ router.get('/myslots/:date', isLoggedin ,function(req,res){
 				for(var i=0;i<24;i++){
 
 					var newSlot = new Slots();
-					console.log(typeof(req.user.userid));
 					newSlot.owner = req.user.userid;
 					newSlot.slot_time = i;
 					newSlot.slot_date = slot_date;
@@ -70,7 +67,6 @@ router.get('/myslots/:date', isLoggedin ,function(req,res){
 
 router.get('/freeslots/:date', isLoggedin ,function(req,res){
 
-	// console.log(req.params);
 	var slot_date = req.params.date;
 	if(!validateDate(slot_date)){
 		res.send("Invalid date");
@@ -92,7 +88,6 @@ router.get('/freeslots/:date', isLoggedin ,function(req,res){
 				for(var i=0;i<24;i++){
 
 					var newSlot = new Slots();
-				// console.log(typeof(req.user._id));
 					newSlot.owner = req.user.userid;
 					newSlot.slot_time = i;
 					newSlot.slot_date = slot_date;
@@ -118,9 +113,15 @@ router.get('/freeslots/:date', isLoggedin ,function(req,res){
 
 router.post('/freeslots/:date', isLoggedin ,function(req,res){
 
-	// console.log(req.params);
 	var slot_date = req.params.date;
-	var busySlots = req.body.busyslots;
+	var busy = req.body.busyslots;
+	var busySlots = [];
+	if(typeof busy === 'string'){
+		busySlots.push(busy);
+	}
+	else{
+		busySlots = busy;
+	}	
 	if(!validateDate(slot_date)){
 		res.send("Invalid date");
 	}
@@ -132,7 +133,6 @@ router.post('/freeslots/:date', isLoggedin ,function(req,res){
 				if(err){
 					console.log(err);
 				}
-				console.log(num.nModified);
 
 			});
 		}
@@ -142,7 +142,6 @@ router.post('/freeslots/:date', isLoggedin ,function(req,res){
 
 router.get('/busyslots/:date', isLoggedin ,function(req,res){
 
-	// console.log(req.params);
 	var slot_date = req.params.date;
 	if(!validateDate(slot_date)){
 		res.send("Invalid date");
@@ -162,9 +161,16 @@ router.get('/busyslots/:date', isLoggedin ,function(req,res){
 
 router.post('/busyslots/:date', isLoggedin ,function(req,res){
 
-	// console.log(req.params);
 	var slot_date = req.params.date;
-	var freeSlots = req.body.freeslots;
+	var free = req.body.freeslots;
+	var freeSlots = [];
+	if(typeof free === 'string'){
+		freeSlots.push(free);
+	}
+	else{
+		freeSlots = free;
+	}
+
 	if(!validateDate(slot_date)){
 		res.send("Invalid date");
 	}
@@ -177,7 +183,6 @@ router.post('/busyslots/:date', isLoggedin ,function(req,res){
 					console.log(err);
 				}
 				console.log(num.nModified);
-
 			});
 		}
 		res.redirect('/users/busyslots/'+slot_date);
@@ -187,7 +192,6 @@ router.post('/busyslots/:date', isLoggedin ,function(req,res){
 function isLoggedin (req,res,next){
 
 	if(req.isAuthenticated()){
-		console.log(req.user);
 		return next();
 	}
 	res.redirect('/auth/login');
@@ -195,16 +199,12 @@ function isLoggedin (req,res,next){
 
 function validateDate(inputText)
 {
-	// var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
 	var dateformat = /^(?:(0[1-9]|[12][0-9]|3[01])[\-.](0[1-9]|1[012])[\-.](19|20)[0-9]{2})$/;
   // Match the date format through regular expression
   	if(inputText.match(dateformat))
 	{
-  		var opera2 = inputText.split('-');
-  		lopera2 = opera2.length;
-  // Extract the string into month, date and year
-  		
-  		var pdate = inputText.split('-');
+
+   		var pdate = inputText.split('-');
   		
   		var dd = parseInt(pdate[0]);
   		var mm  = parseInt(pdate[1]);
@@ -214,13 +214,6 @@ function validateDate(inputText)
   		var year = d.getFullYear();
   		var month = d.getMonth()+1;
   		var day = d.getDate();
-  		
-  		console.log(year);
-  		console.log(day);
-  		console.log(month);
-  		console.log(dd);
-  		console.log(yy);
-  		console.log(mm);
 
   		if(yy < year){
 			return false;

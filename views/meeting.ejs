@@ -9,11 +9,13 @@
     <title>Meeting</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel='stylesheet' href='/stylesheets/signin.css'/>
+    <link rel='stylesheet' href='/stylesheets/slots.css'/>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   </head>
   <body class="text-center">
-      
+    <div style="text-align: right">
+      <a href='/users/logout'><button class="btn btn-lg btn-primary" style="float: right;" type="button">Logout</button></a>
+    </div>  
     <form class="form-signin" method="post">
       <% if(errors) { %>
     <% for(var i=0; i < errors.length; i++) { %>

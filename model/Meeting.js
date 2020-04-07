@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 require('./Slot');
 
-var connection = mongoose.createConnection('mongodb://msaifee:saimoh95@ds145921.mlab.com:45921/bookmyslot');
+var connection = mongoose.createConnection('mongodb://<user>:<password>@ds145921.mlab.com:45921/bookmyslot');
 
 var meetingSchema = new mongoose.Schema({
     

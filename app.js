@@ -19,7 +19,7 @@ mongoose.set('useCreateIndex', true);
 require('./model/User');
 require('./model/Slot');
 require('./model/Meeting');
-mongoose.connect('mongodb://msaifee:saimoh95@ds145921.mlab.com:45921/bookmyslot');
+mongoose.connect('mongodb://<user>:<password>@ds145921.mlab.com:45921/bookmyslot');
 
 var home = require('./routes/home');
 var auth = require('./routes/authenticate');
